@@ -1,0 +1,24 @@
+body {
+    background-image: url("../images/bg.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    text-align: center;
+}
+
+header {
+    background: whitesmoke;
+}
+
+img {
+    height: 150px;
+    width: 250px;
+    margin: 5px;
+}
+
+#characterContainer, #enemies, #battleContainer {
+    display: inline-flex;
+}
+
+
+
+

@@ -5,7 +5,6 @@ var gameObject = {
 
 // create character objects - name, health points, attack power, counter attack power, image
     characters : [
-
         {
             name: "Obi-Wan Kenobi",
             hp: 120,
@@ -37,15 +36,38 @@ var gameObject = {
             ca: "",
             img: "<img src='assets/images/darthmaul.jpg' alt='image of Darth Maul'>"
         }
-    ]
+    ],
 
-    // reset : function() {
-    //     // set variables to ""
-    //     // move character images back to #characters
-    //     // show all characters
- 
-    // }
+    initialize : function() {
+        $(document).ready(function() {
+        // provide instructions
+        this.reset();
+        });
+    },
 
+
+    reset : function() {
+        // set variables to ""
+        $("#status").append("<h3>Choose a hero: </h3>");
+        for (var i = 0; i < this.characters.length; i++) {
+            $("#characterContainer").append("<div id='character" + i + "'</div>");
+            $("#character" + i).append(this.characters[i].img);
+        }
+    },
+
+    // still have the option to switch hero
+    // need button to move to next
+    chooseHero : function() {
+        for (var i = 0; i < this.characters.length; i++) {
+            $("#character" + i).on("click", function() {
+                console.log(i);
+            });
+
+        // once button is clicked, choose defender
+
+        }
+    },
+}
 // attack power is iterative
 
 // counter attack power doesn't change
@@ -64,11 +86,4 @@ var gameObject = {
 
 // text at the bottom displays attack and counter damage and win / lose
 
-}
-
-for (var i = 0; i < gameObject.characters.length; i++) {
-    console.log(gameObject.characters[i].img);
-    $("#characters").append(gameObject.characters[i].img);
-
-}
-
+gameObject.reset();
