@@ -45,12 +45,14 @@ var gameObject = {
         });
     },
 
-
+    
     reset : function() {
         // set variables to ""
         $("#status").append("<h3>Choose a hero: </h3>");
         for (var i = 0; i < this.characters.length; i++) {
             $("#characterContainer").append("<div id='character" + i + "'</div>");
+            $("#character" + i).addClass("character");
+            $("#character" + i).attr("data-name", this.characters[i].name)
             $("#character" + i).append(this.characters[i].img);
         }
     },
@@ -58,19 +60,24 @@ var gameObject = {
     // still have the option to switch hero
     // need button to move to next
     chooseHero : function() {
-        for (var i = 0; i < this.characters.length; i++) {
-            $("#character" + i).on("click", function() {
-                console.log(i);
-            });
-
-        // once button is clicked, choose defender
-
-        }
+        $(document).on("click", ".character", function() {
+            $(this).appendTo("#heroContainer");
+            $("#characterContainer").contents().appendTo("#enemySelectionContainer");
+            $("#characterContainer").empty();
+            $("#status").text("You chose: " + ($(this).attr("data-name")));
+        });
     },
+    
+        // once button is clicked, choose defender
+    chooseEnemy : function() {
+        $("#enemySelectionContainer");
+    }
 }
 // attack power is iterative
 
 // counter attack power doesn't change
+
+
 
 // opponent counter attacks instantly
 
@@ -87,3 +94,5 @@ var gameObject = {
 // text at the bottom displays attack and counter damage and win / lose
 
 gameObject.reset();
+gameObject.chooseHero();
+gameObject.chooseEnemy();

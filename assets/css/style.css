@@ -15,7 +15,7 @@ img {
     margin: 5px;
 }
 
-#characterContainer, #enemies, #battleContainer {
+#characterContainer, #enemySelectionContainer, #battleContainer {
     display: inline-flex;
 }
 
