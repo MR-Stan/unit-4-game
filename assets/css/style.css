@@ -5,21 +5,26 @@ body {
     text-align: center;
 }
 
-header {
-    background: whitesmoke;
-}
-
 img {
     height: 150px;
     width: 250px;
     margin: 5px;
 }
 
+header {
+    background-color: black;
+}
+
+#headerImg {
+    width: auto;
+    height: auto;
+ } 
+
 #characterContainer, #onDeck, #enemySelectionContainer, #battleContainer{
     display: inline-flex;
 }
 
-#characterContainer, #onDeck, #enemySelectionContainer, #attacker, #defender {
+#characterContainer, #onDeck, #enemySelectionContainer {
     border: 2px solid black;
 }
 
@@ -33,4 +38,38 @@ img {
     font-size: 10rem;
 }
 
+main {
+    grid-template-columns: 15% 1fr 1fr 1fr 15%;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+}
 
+#gameStatus {
+    grid-area: 1 / 2 / 2 / 5;
+    height: 100%;
+    width: 100%;
+    background-color: whitesmoke;
+}
+
+#characterContainer, #enemySelectionContainer, #onDeck {
+    grid-area: 2 / 2 / 3 / 5;
+}
+
+#battleContainer {
+    grid-area: 3 / 2 / 4 / 5;
+}
+
+#battleLog {
+    grid-area: 4 / 2 / 5 / 5;
+}
+
+#attacker {
+    background-color: green;
+}
+
+#defender {
+    background-color: maroon;
+}
+
+#attacker, #defender, .image {
+    border: 1px black solid;
+}

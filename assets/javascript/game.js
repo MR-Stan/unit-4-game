@@ -1,12 +1,15 @@
 let gameObject = {
-    // sum of hp, ap, and ca equals 150 for each character
+
+    // create character objects
+    // sum of hp, ap, and ca equals 150 for each character ****************** need to update *******************
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
     characters : [
         {
             name: "Obi-Wan Kenobi",
             hp: 130, // health points
             ap: 12, // attack power
             ca: 8, // counter attack power
-            img: "<img src='assets/images/obi.webp' alt='image of Obi-Wan Kenobi'>"
+            img: "<img src='assets/images/obi.webp' alt='image of Obi-Wan Kenobi' class='image'>"
         },
 
         {
@@ -14,7 +17,7 @@ let gameObject = {
             hp: 120, // health points
             ap: 15, // attack power
             ca: 15, // counter attack power
-            img: "<img src='assets/images/luke.jpg' alt='image of Luke Skywalker'>"
+            img: "<img src='assets/images/luke.jpg' alt='image of Luke Skywalker' class='image'>"
         },
 
         {
@@ -22,7 +25,7 @@ let gameObject = {
             hp: 125, // health points
             ap: 10, // attack power
             ca: 15, // counter attack power
-            img: "<img src='assets/images/darthsidious.webp' alt='image of Darth Sidious'>"
+            img: "<img src='assets/images/darthsidious.webp' alt='image of Darth Sidious' class='image'>"
         },
 
         {
@@ -30,9 +33,12 @@ let gameObject = {
             hp: 100, // health points
             ap: 30, // attack power
             ca: 20, // counter attack power
-            img: "<img src='assets/images/darthmaul.jpg' alt='image of Darth Maul'>"
+            img: "<img src='assets/images/darthmaul.jpg' alt='image of Darth Maul' class='image'>"
         }
     ],
+
+    // set gameObject variables
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     heroHealth : 0,
 
@@ -44,6 +50,9 @@ let gameObject = {
 
     enemyHealth : 0, // need to assign further down
 
+    // initialize game
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
     initialize : function() {
         $(document).ready(function() {
         // provide instructions
@@ -51,10 +60,13 @@ let gameObject = {
         });
     },
     
+    // reset game 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
     reset : function() {
         $("main").empty();
         gameObject.createDivs();
-        $("#status").append("<h3>Choose a hero: </h3>");
+        $("#status").text("Choose a hero to begin.");
         $("#versus").hide(); 
         $(".button").hide();
 
@@ -73,7 +85,9 @@ let gameObject = {
         gameObject.chooseHero();
         },
 
-    // create HTML divs
+    // create HTML elements
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
     createDivs : function() {
 
         // create gameStatus container
@@ -132,13 +146,26 @@ let gameObject = {
         // create battleLog - keeps track of attack and counter damage
         $("<div/>").attr("id", "battleLog").appendTo("main");
 
+        // create button for hero confirmation
+        $("<button>", {text : "Confirm Hero", id : "confirmHeroBtn", class : "button"}).appendTo("main");
+
+        // create button for hero return
+        $("<button>", {text : "Select New Hero", id : "returnHeroBtn", class : "button"}).appendTo("main");
+
+        // create button for enemy confirmation
+        $("<button>", {text : "Confirm Enemy", id : "confirmEnemyBtn", class : "button"}).appendTo("main");
+
+        // create button for enemy return
+        $("<button>", {text : "Select New Enemy", id : "returnEnemyBtn", class : "button"}).appendTo("main");
+
         // create attack button
         $("<button>", {text : "Attack!", id : "attackBtn", class : "button"}).appendTo("main");
 
     },
 
-    // need to have the option to switch hero
-    // need button to move to next
+    // 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
     chooseHero : function() {
         for (let i = 0; i < 1; i++) {
             $("#characterContainer").on("click", ".character", function() {
@@ -147,35 +174,103 @@ let gameObject = {
                 gameObject.heroAttack = 0;
                 $(this).attr("class", "hero");
                 $(".hero").appendTo("#attacker");
-                $("#status").text("You chose " + ($(this).attr("data-name")) + " as your hero.");
-                $(".character").appendTo("#enemySelectionContainer");
-                gameObject.chooseEnemy();
+                $(".character").appendTo("#enemySelectionContainer").hide();
+                $("#status").text("You chose " + ($(this).attr("data-name")) + " as your hero. Are you sure?");
+                gameObject.confirmHeroSelection();
             });
-
         }
     },
-    
+
+    // 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    confirmHeroSelection : function() {
+        $("#confirmHeroBtn").show();
+        $("#returnHeroBtn").show();
+        $("#confirmHeroBtn").on("click", function() {
+            gameObject.confirmHero();
+        });
+        $("#returnHeroBtn").on("click", function() {
+            gameObject.reset();
+        });
+    },
+
+    // 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    confirmHero : function() {
+        $("#confirmHeroBtn").hide();
+        $("#returnHeroBtn").hide();
+        $(".hero").hide();
+        $(".character").show();
+        gameObject.chooseEnemy();
+    },
+
+    // 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
     chooseEnemy : function() {
+        $("#status").text("Select an enemy to battle.");
         for (let i = 0; i < 1; i++) {
             $("#enemySelectionContainer").on("click", ".character", function() {
                 gameObject.enemyCounter = ($(this).attr("data-ca")); 
                 gameObject.enemyHealth = ($(this).attr("data-hp"));
                 $(this).attr("class", "defender");
                 $(".defender").appendTo("#defender");
-                $("#status").text("You chose to attack " + ($(this).attr("data-name")));
-                $(".character").appendTo("#onDeckContainer");
-                $("#onDeckContainer").hide();
-                gameObject.battle();
+                $("#status").text("You chose to battle " + ($(this).attr("data-name")) + ". Are you sure?");
+                $(".character").appendTo("#onDeckContainer").hide();
+                gameObject.confirmEnemySelection();
             });
         }
     },
 
-    // need to do something on first attack
+    // 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    confirmEnemySelection : function() {
+        $("#confirmEnemyBtn").show();
+        $("#returnEnemyBtn").show();
+        $("#confirmEnemyBtn").on("click", function() {
+            gameObject.confirmEnemy();
+        });
+        $("#returnEnemyBtn").on("click", function() {
+            gameObject.returnEnemy();
+        });
+    },
+
+    // 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    confirmEnemy : function() {
+        $("#confirmEnemyBtn").hide();
+        $("#returnEnemyBtn").hide();
+        $(".character").hide();
+        gameObject.battle();
+    },
+
+    // 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    returnEnemy : function() {
+        $(".defender").attr("class", "character");
+        $(".character").appendTo("#enemySelectionContainer").show();
+        $("#confirmEnemyBtn").hide();
+        $("#returnEnemyBtn").hide();
+        gameObject.chooseEnemy();
+    },
+
+    // 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
     battle : function() {
+        $("#status").text("Prepare to battle!");
+        $(".button").hide() // why are enemy buttons showing here?
+        $(".hero").show();
         $("#versus").show();
-        $(".button").show();
+        $("#attackBtn").show();
         let attack = parseInt(gameObject.heroAttack);
         $("#attackBtn").click(function() { 
+            $("#status").hide();
             attack += parseInt(gameObject.heroBase);
             $("#battleLog").append("You attacked for " + attack + " damage!");
             $("#battleLog").append("You were counter attacked for " + gameObject.enemyCounter + " damage!")
@@ -183,11 +278,11 @@ let gameObject = {
             gameObject.checkWin();
             gameObject.heroHealth -= gameObject.enemyCounter;
             gameObject.checkWin();
-            console.log(gameObject.enemyHealth);
-            console.log(gameObject.heroHealth);
             return attack; 
         });
     },
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     winCount : function() {
         let winCounter = 0;
@@ -198,6 +293,8 @@ let gameObject = {
         }
     },
 
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
     lossCount : function() {
         let lossCounter = 0;
         return function() {
@@ -206,6 +303,8 @@ let gameObject = {
             return lossCounter;
         }
     },
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     checkWin : function() {
         if (gameObject.enemyHealth <= 0 ) {
@@ -219,14 +318,6 @@ let gameObject = {
     }
 
 }
-
-// attack power is iterative
-
-// counter attack power doesn't change
-
-
-
-// opponent counter attacks instantly
 
 // characters div holds four options initially - white background green border
 // select one and it moves to hero div 
