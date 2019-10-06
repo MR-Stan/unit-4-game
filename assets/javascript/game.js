@@ -8,7 +8,7 @@ var gameObject = {
         {
             name: "Obi-Wan Kenobi",
             hp: 120,
-            ap: "",
+            ap: "test",
             ca: "",
             img: "<img src='assets/images/obi.webp' alt='image of Obi-Wan Kenobi'>"
         },
@@ -16,7 +16,7 @@ var gameObject = {
         {
             name: "Luke Skywalker",
             hp: 100,
-            ap: "",
+            ap: "test",
             ca: "",
             img: "<img src='assets/images/luke.jpg' alt='image of Luke Skywalker'>"
         },
@@ -24,7 +24,7 @@ var gameObject = {
         {
             name: "Darth Sidious",
             hp: 150,
-            ap: "",
+            ap: "test",
             ca: "",
             img: "<img src='assets/images/darthsidious.webp' alt='image of Darth Sidious'>"
         },
@@ -32,11 +32,13 @@ var gameObject = {
         {
             name: "Darth Maul",
             hp: 180,
-            ap: "",
+            ap: "test",
             ca: "",
             img: "<img src='assets/images/darthmaul.jpg' alt='image of Darth Maul'>"
         }
     ],
+
+    heroAttack : 0,
 
     initialize : function() {
         $(document).ready(function() {
@@ -44,35 +46,61 @@ var gameObject = {
         this.reset();
         });
     },
-
     
     reset : function() {
         // set variables to ""
         $("#status").append("<h3>Choose a hero: </h3>");
+        $("<button>", {text : "Attack!", id : "attackBtn", class : "button"}).appendTo("main");
+        $(".button").hide();
         for (var i = 0; i < this.characters.length; i++) {
             $("#characterContainer").append("<div id='character" + i + "'</div>");
             $("#character" + i).addClass("character");
             $("#character" + i).attr("data-name", this.characters[i].name)
             $("#character" + i).append(this.characters[i].img);
+            gameObject.chooseHero();
         }
     },
 
     // still have the option to switch hero
     // need button to move to next
     chooseHero : function() {
-        $(document).on("click", ".character", function() {
-            $(this).appendTo("#heroContainer");
-            $("#characterContainer").contents().appendTo("#enemySelectionContainer");
-            $("#characterContainer").empty();
-            $("#status").text("You chose: " + ($(this).attr("data-name")));
-        });
+        for (var i = 0; i < 1; i++) {
+            $(document).on("click", ".character", function() {
+                $(this).attr("class", "hero");
+                gameObject.heroAttack = ($(this).ap)
+                $(".hero").appendTo("#attacker");
+                $("#status").text("You chose " + ($(this).attr("data-name")) + " as your hero.");
+                $(".character").attr("class", "enemy");
+                $("#characterContainer").contents().appendTo("#enemySelectionContainer");
+                gameObject.chooseEnemy();
+            });
+
+        }
     },
     
         // once button is clicked, choose defender
     chooseEnemy : function() {
-        $("#enemySelectionContainer");
+        for (var i = 0; i < 1; i++) {
+            $(document).on("click", ".enemy", function() {
+                $(this).attr("class", "defender");
+                $(".defender").appendTo("#defender");
+                $("#status").text("You chose to attack " + ($(this).attr("data-name")));
+                $(".enemy").attr("class", "enemies");
+                $("#enemySelectionContainer").contents().appendTo("#onDeck");
+                $("#onDeck").hide();
+                $(".button").show();
+                gameObject.fight();
+            });
+        }
+    },
+
+    fight : function() {
+        $("#attackBtn").click(function() { 
+            $("#status").text("You attacked for " + gameObject.heroAttack + " damage!");
+        });
     }
 }
+
 // attack power is iterative
 
 // counter attack power doesn't change
@@ -94,5 +122,5 @@ var gameObject = {
 // text at the bottom displays attack and counter damage and win / lose
 
 gameObject.reset();
-gameObject.chooseHero();
-gameObject.chooseEnemy();
+
+

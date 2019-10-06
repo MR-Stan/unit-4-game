@@ -15,10 +15,17 @@ img {
     margin: 5px;
 }
 
-#characterContainer, #enemySelectionContainer, #battleContainer {
+#characterContainer, #enemySelectionContainer, #battleContainer, #onDeck {
     display: inline-flex;
 }
 
+#status, #characterContainer, #onDeck, #enemySelectionContainer, #battleContainer {
+    border: 2px solid black;
+}
 
+.button {
+    height: 100px;
+    width: 200px;
+}
 
 
