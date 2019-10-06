@@ -8,42 +8,47 @@ var gameObject = {
         {
             name: "Obi-Wan Kenobi",
             hp: 120,
-            ap: "test",
-            ca: "",
+            ap: 13,
+            ca: 9,
             img: "<img src='assets/images/obi.webp' alt='image of Obi-Wan Kenobi'>"
         },
 
         {
             name: "Luke Skywalker",
             hp: 100,
-            ap: "test",
-            ca: "",
+            ap: 20,
+            ca: 33,
             img: "<img src='assets/images/luke.jpg' alt='image of Luke Skywalker'>"
         },
 
         {
             name: "Darth Sidious",
             hp: 150,
-            ap: "test",
-            ca: "",
+            ap: 10,
+            ca: 14,
             img: "<img src='assets/images/darthsidious.webp' alt='image of Darth Sidious'>"
         },
 
         {
             name: "Darth Maul",
             hp: 180,
-            ap: "test",
-            ca: "",
+            ap: 16,
+            ca: 25,
             img: "<img src='assets/images/darthmaul.jpg' alt='image of Darth Maul'>"
         }
     ],
 
+    heroHealth : 0,
     heroAttack : 0,
+    // heroCounter : 0, need to change to enemy
+    enemyHealth : 0, // need to assign further down
+
+
 
     initialize : function() {
         $(document).ready(function() {
         // provide instructions
-        this.reset();
+        gameObject.reset();
         });
     },
     
@@ -52,22 +57,31 @@ var gameObject = {
         $("#status").append("<h3>Choose a hero: </h3>");
         $("<button>", {text : "Attack!", id : "attackBtn", class : "button"}).appendTo("main");
         $(".button").hide();
-        for (var i = 0; i < this.characters.length; i++) {
-            $("#characterContainer").append("<div id='character" + i + "'</div>");
-            $("#character" + i).addClass("character");
-            $("#character" + i).attr("data-name", this.characters[i].name)
-            $("#character" + i).append(this.characters[i].img);
+            $.each(this.characters, function (index) {
+                $("#characterContainer").append("<div id='character" + index + "'</div>");
+                $("#character" + index).addClass("character");
+                $("#character" + index).attr({
+                    'data-name' : gameObject.characters[index].name,
+                    'data-hp' : gameObject.characters[index].hp,
+                    'data-ap' : gameObject.characters[index].ap,
+                    'data-ca' : gameObject.characters[index].ca
+                });
+                $("#character" + index).append(this.img);
+                console.log(this);
+            });
             gameObject.chooseHero();
-        }
-    },
+        },
 
-    // still have the option to switch hero
+    // need to have the option to switch hero
     // need button to move to next
     chooseHero : function() {
         for (var i = 0; i < 1; i++) {
             $(document).on("click", ".character", function() {
+                console.log(this);
                 $(this).attr("class", "hero");
-                gameObject.heroAttack = ($(this).ap)
+                gameObject.heroHealth = ($(this).attr("data-hp"));
+                gameObject.heroAttack = ($(this).attr("data-ap"));
+                // gameObject.heroCounter = ($(this).attr("data-ca")); need to move enemy
                 $(".hero").appendTo("#attacker");
                 $("#status").text("You chose " + ($(this).attr("data-name")) + " as your hero.");
                 $(".character").attr("class", "enemy");
@@ -78,7 +92,6 @@ var gameObject = {
         }
     },
     
-        // once button is clicked, choose defender
     chooseEnemy : function() {
         for (var i = 0; i < 1; i++) {
             $(document).on("click", ".enemy", function() {
@@ -97,6 +110,10 @@ var gameObject = {
     fight : function() {
         $("#attackBtn").click(function() { 
             $("#status").text("You attacked for " + gameObject.heroAttack + " damage!");
+            var attack = parseInt(gameObject.heroAttack);
+            attack = attack + attack;
+            gameObject.heroAttack = attack;
+            console.log(attack)
         });
     }
 }
@@ -121,6 +138,6 @@ var gameObject = {
 
 // text at the bottom displays attack and counter damage and win / lose
 
-gameObject.reset();
+gameObject.initialize();
 
 
