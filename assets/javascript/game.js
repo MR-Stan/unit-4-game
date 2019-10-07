@@ -34,7 +34,16 @@ let gameObject = {
             ap: 30, // attack power
             ca: 20, // counter attack power
             img: "<img src='assets/images/darthmaul.jpg' alt='image of Darth Maul' class='image'>"
+        },
+
+        {
+            name: "Yoda",
+            hp: 130, // health points
+            ap: 12, // attack power
+            ca: 8, // counter attack power
+            img: "<img src='assets/images/yoda.jpg' alt='image of Yoda' class='image'>"
         }
+
     ],
 
     // set gameObject variables
@@ -100,7 +109,7 @@ let gameObject = {
                 $("<span/>").attr("id", "wins").after("#winText");
 
                     // add 'Wins: ' text
-                    $("#wins").append("Wins: ");
+                    $("#wins").html("Wins: ");
 
             // create lossText - holds losses
             $("<div/>").attr("id", "lossText").appendTo("#gameStatus");
@@ -109,7 +118,7 @@ let gameObject = {
                 $("<span/>").attr("id", "losses").after("#lossText");
 
                     // add 'Losses: ' text
-                    $("#losses").append("Losses: ");
+                    $("#losses").html("Losses: ");
 
             // create status - tracks status of game
             $("<div/>").attr("id", "status").appendTo("#gameStatus");
@@ -143,23 +152,26 @@ let gameObject = {
             $("<div/>").attr("id", "defender").appendTo("#battleContainer");
         // end of battleContainer
 
-        // create battleLog - keeps track of attack and counter damage
-        $("<div/>").attr("id", "battleLog").appendTo("main");
+        // create buttonContainer to hold buttons
+        $("<div/>").attr("id", "buttonContainer").appendTo("main");
 
         // create button for hero confirmation
-        $("<button>", {text : "Confirm Hero", id : "confirmHeroBtn", class : "button"}).appendTo("main");
+        $("<button>", {text : "Confirm Hero", id : "confirmHeroBtn", class : "button"}).appendTo("#buttonContainer");
 
         // create button for hero return
-        $("<button>", {text : "Select New Hero", id : "returnHeroBtn", class : "button"}).appendTo("main");
+        $("<button>", {text : "Select New Hero", id : "returnHeroBtn", class : "button"}).appendTo("#buttonContainer");
 
         // create button for enemy confirmation
-        $("<button>", {text : "Confirm Enemy", id : "confirmEnemyBtn", class : "button"}).appendTo("main");
+        $("<button>", {text : "Confirm Enemy", id : "confirmEnemyBtn", class : "button"}).appendTo("#buttonContainer");
 
         // create button for enemy return
-        $("<button>", {text : "Select New Enemy", id : "returnEnemyBtn", class : "button"}).appendTo("main");
+        $("<button>", {text : "Select New Enemy", id : "returnEnemyBtn", class : "button"}).appendTo("#buttonContainer");
 
         // create attack button
-        $("<button>", {text : "Attack!", id : "attackBtn", class : "button"}).appendTo("main");
+        $("<button>", {text : "Attack!", id : "attackBtn", class : "button"}).appendTo("#buttonContainer");
+
+        // create battleLog - keeps track of attack and counter damage
+        $("<div/>").attr("id", "battleLog").appendTo("main");
 
     },
 
@@ -315,7 +327,9 @@ let gameObject = {
             gameObject.lossCount();
             gameObject.reset();
         }
-    }
+    },
+
+    // keep count of wins and losses by battle. if win select next enemy. if lose replace enemy and select next.
 
 }
 
