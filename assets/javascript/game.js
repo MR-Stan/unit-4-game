@@ -92,6 +92,8 @@ let gameObject = {
                 'data-ca' : gameObject.characters[index].ca
             });
             $("#character" + index).append(this.img);
+            $("#character" + index).append("<br>" + this.name);
+            $("#character" + index).append("<br>Health: " + this.hp); // this needs to be implemented initially and replaced for attacker and defender
         });
         gameObject.chooseHero();
         },
@@ -189,6 +191,7 @@ let gameObject = {
             $(".hero").appendTo("#attacker");
             $(".character").appendTo("#enemySelectionContainer")
             $("#enemySelectionContainer").hide();
+            $("#characterContainer").hide();
             $("#status").text("You chose " + ($(this).attr("data-name")) + " as your hero. Are you sure?");
             gameObject.confirmHeroSelection();
         });
@@ -267,10 +270,10 @@ let gameObject = {
             $("#battleLog").append("<br>You attacked for " + attack + " damage!");
             $("#battleLog").append("<br>You were counter attacked for " + gameObject.enemyCounter + " damage!<br>")
             gameObject.enemyHealth -= attack;
-            //gameObject.checkWin();
             gameObject.heroHealth -= gameObject.enemyCounter;
+            $(".heroHP").text("Health: " + gameObject.heroHealth);
             gameObject.checkWin();
-            //return attack; 
+
         });
     },
 
@@ -302,7 +305,7 @@ let gameObject = {
 
     checkWin : function() {
         $("#status").show();
-        if (gameObject.enemyHealth <= 0 ) {
+        if (gameObject.enemyHealth <= 0 && gameObject.heroHealth > 0) {
             //gameObject.winCount();
             if (gameObject.enemiesRemaining > 1) { 
                 gameObject.nextEnemy();
@@ -313,10 +316,21 @@ let gameObject = {
                 gameObject.playAgain();
             }
         }
-        else if (gameObject.heroHealth <= 0) {
+        else if (gameObject.heroHealth <= 0 && gameObject.enemyHealth > 0) {
             $("#status").text("You were defeated!");
             //gameObject.lossCount();
-
+            gameObject.playAgain();
+        }
+        else if (gameObject.heroHealth < 0 && gameObject.enemyHealth < 0) {
+            //gameObject.winCount();
+            if (gameObject.enemiesRemaining > 1) { 
+                gameObject.nextEnemy();
+            }
+            else {
+                $("#battleContainer").hide();
+                $("#status").text("You have defeated all enemies!")
+                gameObject.playAgain();
+            }
         }
     },
 

@@ -30,16 +30,28 @@ footer {
 #characterContainer {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    background-color: black;
+    opacity: 0.95;
+    border: 1px solid rgb(232,198,39);
+    padding-bottom: 0.5%;
+}
+
+#enemySelectionContainer {
+    background-color: black;
+    opacity: 0.95;
+    border: 1px solid rgb(232,198,39);
+    padding-bottom: 0.5%;
 }
 
 .image {
     height: 150px;
     width: 250px;
     margin: 10px;
-    border: 1px solid black; 
+    border: 1px solid rgb(232,198,39);
+    opacity: 1;
 }
 
-#onDeck, #enemySelectionContainer, #battleContainer{
+#enemySelectionContainer, #battleContainer{
     display: inline-flex;
 }
 
@@ -54,14 +66,19 @@ footer {
     font-size: 1.1em;
 }
 
+#attacker, #defender {
+    border: 1px solid black; 
+    color: white;
+    font-size: 1.2em;
+    padding-bottom: 0.5%;
+}
+
 #attacker {
     background-color: green;
-    border: 1px solid black; 
 }
 
 #defender {
     background-color: maroon;
-    border: 1px solid black; 
 }
 
 #versus {
@@ -105,5 +122,9 @@ footer {
 
 #wins, #losses {
     margin: 1%;
-    
+}
+
+.character {
+    color: rgb(232,198,39);
+    font-size: 1.2em;
 }
