@@ -101,30 +101,30 @@ let gameObject = {
 
     createDivs : function() {
 
-        // create gameStatus container
-        $("<div/>").attr("id", "gameStatus").appendTo("main");
+        // // create gameStatus container
+        // $("<div/>").attr("id", "gameStatus").appendTo("main");
 
-            // create winText - hold wins
-            $("<div/>").attr("id", "winText").appendTo("#gameStatus");
+        //     // create winText - hold wins
+        //     $("<div/>").attr("id", "winText").appendTo("#gameStatus");
 
-                // create wins - holds 'Wins: '
-                $("<span/>").attr("id", "wins").after("#winText");
+        //         // create wins - holds 'Wins: '
+        //         $("<span/>").attr("id", "wins").appendTo("#winText");
 
-                // add 'Wins: ' text
-                $("#winText").text("Wins: ");
+        //         // add 'Wins: ' text
+        //         $("#wins").text("Wins: ");
 
-            // create lossText - holds losses
-            $("<div/>").attr("id", "lossText").appendTo("#gameStatus");
+        //     // create lossText - holds losses
+        //     $("<div/>").attr("id", "lossText").appendTo("#gameStatus");
 
-                // create losses - holds 'Losses: '
-                $("<span/>").attr("id", "losses").after("#lossText");
+        //         // create losses - holds 'Losses: '
+        //         $("<span/>").attr("id", "losses").appendTo("#lossText");
 
-                // add 'Losses: ' text
-                $("#lossText").text("Losses: ");
+        //         // add 'Losses: ' text
+        //         $("#losses").text("Losses: ");
+        // // end of gameStatus container
 
-            // create status - tracks status of game
-            $("<div/>").attr("id", "status").appendTo("main");
-        // end of gameStatus container
+        // create status - tracks status of game
+        $("<div/>").attr("id", "status").appendTo("main");
 
         // create characterContainer - holds characters prior to hero selection
         $("<div/>").attr("id", "characterContainer").appendTo("main");
@@ -181,19 +181,17 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     chooseHero : function() {
-        for (let i = 0; i < 1; i++) {
-            $("#characterContainer").on("click", ".character", function() {
-                gameObject.heroHealth = ($(this).attr("data-hp"));
-                gameObject.heroBase = ($(this).attr("data-ap"));
-                gameObject.heroAttack = 0;
-                $(this).attr("class", "hero");
-                $(".hero").appendTo("#attacker");
-                $(".character").appendTo("#enemySelectionContainer")
-                $("#enemySelectionContainer").hide();
-                $("#status").text("You chose " + ($(this).attr("data-name")) + " as your hero. Are you sure?");
-                gameObject.confirmHeroSelection();
-            });
-        }
+        $("#characterContainer").on("click", ".character", function() {
+            gameObject.heroHealth = ($(this).attr("data-hp"));
+            gameObject.heroBase = ($(this).attr("data-ap"));
+            gameObject.heroAttack = 0;
+            $(this).attr("class", "hero");
+            $(".hero").appendTo("#attacker");
+            $(".character").appendTo("#enemySelectionContainer")
+            $("#enemySelectionContainer").hide();
+            $("#status").text("You chose " + ($(this).attr("data-name")) + " as your hero. Are you sure?");
+            gameObject.confirmHeroSelection();
+        });
     },
 
     // 
@@ -203,40 +201,31 @@ let gameObject = {
         $("#confirmHeroBtn").show();
         $("#returnHeroBtn").show();
         $("#confirmHeroBtn").on("click", function() {
-            gameObject.confirmHero();
+            $(".button").hide();
+            $(".hero").hide();
+            gameObject.chooseEnemy();
         });
         $("#returnHeroBtn").on("click", function() {
             gameObject.reset();
         });
     },
 
-    // 
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    confirmHero : function() {
-        $("#confirmHeroBtn").hide();
-        $("#returnHeroBtn").hide();
-        $(".hero").hide();
-        gameObject.chooseEnemy();
-    },
-
-    // 
+      // 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     chooseEnemy : function() {
         $("#status").text("Select an enemy to battle.");
         $("#enemySelectionContainer").show();
-        for (let i = 0; i < 1; i++) {
-            $("#enemySelectionContainer").on("click", ".character", function() {
-                gameObject.enemyCounter = ($(this).attr("data-ca")); 
-                gameObject.enemyHealth = ($(this).attr("data-hp"));
-                $(this).attr("class", "defender");
-                $(".defender").appendTo("#defender");
-                $("#status").text("You chose to battle " + ($(this).attr("data-name")) + ". Are you sure?");
-                $("#enemySelectionContainer").hide();
-                gameObject.confirmEnemySelection();
-            });
-        }
+        $("#enemySelectionContainer").on("click", ".character", function(e) {
+            e.stopImmediatePropagation()
+            gameObject.enemyCounter = ($(this).attr("data-ca")); 
+            gameObject.enemyHealth = ($(this).attr("data-hp"));
+            $(this).attr("class", "defender");
+            $(".defender").appendTo("#defender");
+            $("#status").text("You chose to battle " + ($(this).attr("data-name")) + ". Are you sure?");
+            $("#enemySelectionContainer").hide();
+            gameObject.confirmEnemySelection(); // this is causing error
+        });
     },
 
     // 
@@ -246,101 +235,87 @@ let gameObject = {
         $("#confirmEnemyBtn").show();
         $("#returnEnemyBtn").show();
         $("#confirmEnemyBtn").on("click", function() {
-            gameObject.confirmEnemy();
+            $(".button").hide();
+            $("#enemySelectionContainer").hide();
+            gameObject.battle();
         });
         $("#returnEnemyBtn").on("click", function() {
-            gameObject.returnEnemy();
+            $(".defender").appendTo("#enemySelectionContainer");
+            $(".defender").attr("class", "character");
+            $("#enemySelectionContainer").show();
+            $(".button").hide();
+            gameObject.chooseEnemy();
         });
     },
 
-    // 
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    confirmEnemy : function() {
-        $("#confirmEnemyBtn").hide();
-        $("#returnEnemyBtn").hide();
-        $("#enemySelectionContainer").hide();
-        gameObject.battle();
-    },
-
-    // 
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    returnEnemy : function() {
-        $(".defender").appendTo("#enemySelectionContainer");
-        $(".defender").attr("class", "character");
-        $("#enemySelectionContainer").show();
-        $("#confirmEnemyBtn").hide();
-        $("#returnEnemyBtn").hide();
-        gameObject.chooseEnemy();
-    },
 
     // 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     battle : function() {
         $("#status").text("Prepare to battle!");
-        $(".button").hide() // why are enemy buttons showing here?
+        $(".button").hide() 
         $(".hero").show();
         $("#versus").show();
         $("#attackBtn").show();
         let attack = parseInt(gameObject.heroAttack);
-        $("#attackBtn").click(function() { 
+        $("#attackBtn").click(function(e) { 
+            e.stopImmediatePropagation();
             $("#status").text("May the force be with you!"); // create array of star wars lines and loop through
             $("#battleLog").show();
             attack += parseInt(gameObject.heroBase);
             $("#battleLog").append("<br>You attacked for " + attack + " damage!");
             $("#battleLog").append("<br>You were counter attacked for " + gameObject.enemyCounter + " damage!<br>")
             gameObject.enemyHealth -= attack;
-            console.log(gameObject.enemyHealth);
-            gameObject.checkWin();
+            //gameObject.checkWin();
             gameObject.heroHealth -= gameObject.enemyCounter;
             gameObject.checkWin();
-            return attack; 
+            //return attack; 
         });
     },
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    winCount : function() {
-        $("#status").text("You win!");
-        let winCounter = 0;
-        return function() {
-            winCounter += 1; 
-            $("#wins").text(winCounter);
-            return winCounter;
-        }
-    },
+    // winCount : function() {
+    //     $("#status").text("You win!");
+    //     let winCounter = 0;
+    //     return function() {
+    //         winCounter += 1; 
+    //         $("#wins").text(winCounter);
+    //         return winCounter;
+    //     }
+    // },
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    lossCount : function() {
-        $("#status").text("You lose!");
-        let lossCounter = 0;
-        return function() {
-            lossCounter += 1; 
-            $("#losses").text(lossCounter);
-            return lossCounter;
-        }
-    },
+    // lossCount : function() {
+    //     $("#status").text("You lose!");
+    //     let lossCounter = 0;
+    //     return function() {
+    //         lossCounter += 1; 
+    //         $("#losses").text(lossCounter);
+    //         return lossCounter;
+    //     }
+    // },
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     checkWin : function() {
         $("#status").show();
-        console.log(gameObject.enemiesRemaining);
         if (gameObject.enemyHealth <= 0 ) {
-            gameObject.winCount();
-            if (gameObject.enemiesRemaining >= 1) { 
+            //gameObject.winCount();
+            if (gameObject.enemiesRemaining > 1) { 
                 gameObject.nextEnemy();
             }
             else {
+                $("#battleContainer").hide();
                 $("#status").text("You have defeated all enemies!")
                 gameObject.playAgain();
             }
         }
         else if (gameObject.heroHealth <= 0) {
-            gameObject.lossCount();
+            $("#status").text("You were defeated!");
+            //gameObject.lossCount();
 
         }
     },
@@ -363,12 +338,11 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     playAgain : function() {
-        $("#attackBtn").hide();
+        $(".button").hide();
         $("#battleLog").hide();
-        $("#status").append(" Would you like to play again?");
         $("#playAgainBtn").show(); 
         $("#playAgainBtn").click(function() { 
-        gameObject.reset();
+            gameObject.reset();
         });
         
     },
