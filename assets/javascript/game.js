@@ -59,6 +59,8 @@ let gameObject = {
 
     enemyHealth : 0, // need to assign further down
 
+    enemiesRemaining : 0, // need to assign
+
     // initialize game
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -77,6 +79,7 @@ let gameObject = {
         gameObject.createDivs();
         $("#status").text("Choose a hero to begin.");
         $("#versus").hide(); 
+        $("#battleLog").hide();
         $(".button").hide();
 
         $.each(this.characters, function (index) {
@@ -106,19 +109,19 @@ let gameObject = {
             $("<div/>").attr("id", "winText").appendTo("#gameStatus");
 
                 // create wins - holds 'Wins: '
-                $("<span/>").attr("id", "wins").after("#winText");
+                $("<span/>").attr("id", "wins").appendTo("#winText");
 
                     // add 'Wins: ' text
-                    $("#wins").html("Wins: ");
+                    $("#wins").text("Wins: ");
 
             // create lossText - holds losses
             $("<div/>").attr("id", "lossText").appendTo("#gameStatus");
 
                 // create losses - holds 'Losses: '
-                $("<span/>").attr("id", "losses").after("#lossText");
+                $("<span/>").attr("id", "losses").appendTo("#lossText");
 
                     // add 'Losses: ' text
-                    $("#losses").html("Losses: ");
+                    $("#losses").text("Losses: ");
 
             // create status - tracks status of game
             $("<div/>").attr("id", "status").appendTo("#gameStatus");
@@ -169,6 +172,9 @@ let gameObject = {
 
         // create attack button
         $("<button>", {text : "Attack!", id : "attackBtn", class : "button"}).appendTo("#buttonContainer");
+
+        // create play again button
+        $("<button>", {text : "Play Again", id : "playAgainBtn", class : "button"}).appendTo("#buttonContainer");
 
         // create battleLog - keeps track of attack and counter damage
         $("<div/>").attr("id", "battleLog").appendTo("main");
@@ -283,9 +289,10 @@ let gameObject = {
         let attack = parseInt(gameObject.heroAttack);
         $("#attackBtn").click(function() { 
             $("#status").hide();
+            $("#battleLog").show();
             attack += parseInt(gameObject.heroBase);
-            $("#battleLog").append("You attacked for " + attack + " damage!");
-            $("#battleLog").append("You were counter attacked for " + gameObject.enemyCounter + " damage!")
+            $("#battleLog").append("<br>You attacked for " + attack + " damage!");
+            $("#battleLog").append("<br>You were counter attacked for " + gameObject.enemyCounter + " damage!<br>")
             gameObject.enemyHealth -= attack;
             gameObject.checkWin();
             gameObject.heroHealth -= gameObject.enemyCounter;
@@ -297,6 +304,7 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     winCount : function() {
+        $("#status").text("You won!");
         let winCounter = 0;
         return function() {
             winCounter += 1; 
@@ -308,6 +316,7 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     lossCount : function() {
+        $("#status").text("You lost!");
         let lossCounter = 0;
         return function() {
             lossCounter += 1; 
@@ -319,31 +328,52 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     checkWin : function() {
+        $("#status").show();
         if (gameObject.enemyHealth <= 0 ) {
+            $("#status").text("You defeated an enemy.")
             gameObject.winCount();
-            gameObject.reset();
+            if (gameObject.enemiesRemaining > 0) {
+                gameObject.nextEnemy();
+            }
+            else {
+                gameObject.playAgain();
+            }
         }
         else if (gameObject.heroHealth <= 0) {
             gameObject.lossCount();
-            gameObject.reset();
+
         }
+    },
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    nextEnemy : function() {
+        // hide everything
+        // $(".character").show();
+        // .gameObject.chooseEnemy();
+    },
+
+    // ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    playAgain : function() {
+        $("#attackBtn").hide();
+
+        $("#status").text("Would you like to play again?");
+        $("#playAgainBtn").show(); 
+        $("#playAgainBtn").click(function() { 
+        gameObject.reset();
+        });
+        
     },
 
     // keep count of wins and losses by battle. if win select next enemy. if lose replace enemy and select next.
 
 }
 
-// characters div holds four options initially - white background green border
-// select one and it moves to hero div 
-// the other three move to enemies div - red background with black lines
-// select one to battle which moves to defender div - black background with green border
-// once hp === 0 enemy disappears
 
-// only name and hp are displayed around character
+// name and hp are displayed around character
 
 // must be able to win no matter what character is chosen
-
-// text at the bottom displays attack and counter damage and win / lose
 
 gameObject.initialize();
 

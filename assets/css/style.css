@@ -1,5 +1,6 @@
 html {
     max-height: 100vh;
+    font-family: 'IBM Plex Sans', sans-serif;
 }
 
 body {
@@ -35,6 +36,7 @@ footer {
     height: 150px;
     width: 250px;
     margin: 10px;
+    border: 1px solid black; 
 }
 
 #onDeck, #enemySelectionContainer, #battleContainer{
@@ -42,29 +44,49 @@ footer {
 }
 
 .button {
-    height: 150px;
-    width: 250px;
+    height: 10vh;
+    width: 10vw;
     margin: 5px;
-}
-
-#attacker, #defender, .image {
-    border: 1px black solid;
+    background-color:black;
+    color: rgb(232,198,39);
+    border: 1px solid rgb(232,198,39); 
+    opacity: 0.85;
+    font-size: 1.1em;
 }
 
 #attacker {
     background-color: green;
+    border: 1px solid black; 
 }
 
 #defender {
     background-color: maroon;
+    border: 1px solid black; 
 }
 
 #versus {
     color: rgb(232,198,39);
     font-size: 10em;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    margin: 1%;
+}
+
+#status, #battleLog {
+    border: 1px solid rgb(232,198,39);
+    font-size: 1.25em;
+    background-color:black;
+    color: rgb(232,198,39);
+    opacity: 0.85;
 }
 
 #status {
-    background-color: blanchedalmond;
+    width: 50%;
+    line-height: 200%;
+    margin: 2% auto;
+}
+
+#battleLog {
+    height: 50%;
+    width: 50%;
+    margin: auto;
 }
