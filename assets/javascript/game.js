@@ -1,8 +1,5 @@
 let gameObject = {
 
-    // onDeckContainer is not necessary remove all reference to it
-
-
     // create character objects
     // sum of hp, ap, and ca equals 150 for each character ****************** need to update *******************
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -60,9 +57,9 @@ let gameObject = {
 
     enemyCounter : 0, 
 
-    enemyHealth : 0, // need to assign further down
+    enemyHealth : 0, 
 
-    enemiesRemaining : 0, // need to assign
+    enemiesRemaining : 0, 
 
     // initialize game
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -84,7 +81,6 @@ let gameObject = {
         $("#versus").hide(); 
         $("#battleLog").hide();
         $(".button").hide();
-
         $.each(this.characters, function (index) {
             gameObject.enemiesRemaining = Math.max(index);
             $("#characterContainer").append("<div id='character" + index + "'</div>");
@@ -95,7 +91,6 @@ let gameObject = {
                 'data-ap' : gameObject.characters[index].ap,
                 'data-ca' : gameObject.characters[index].ca
             });
-
             $("#character" + index).append(this.img);
         });
         gameObject.chooseHero();
@@ -113,19 +108,19 @@ let gameObject = {
             $("<div/>").attr("id", "winText").appendTo("#gameStatus");
 
                 // create wins - holds 'Wins: '
-                $("<span/>").attr("id", "wins").appendTo("#winText");
+                $("<span/>").attr("id", "wins").after("#winText");
 
-                    // add 'Wins: ' text
-                    $("#wins").text("Wins: ");
+                // add 'Wins: ' text
+                $("#winText").text("Wins: ");
 
             // create lossText - holds losses
             $("<div/>").attr("id", "lossText").appendTo("#gameStatus");
 
                 // create losses - holds 'Losses: '
-                $("<span/>").attr("id", "losses").appendTo("#lossText");
+                $("<span/>").attr("id", "losses").after("#lossText");
 
-                    // add 'Losses: ' text
-                    $("#losses").text("Losses: ");
+                // add 'Losses: ' text
+                $("#lossText").text("Losses: ");
 
             // create status - tracks status of game
             $("<div/>").attr("id", "status").appendTo("main");
@@ -136,9 +131,6 @@ let gameObject = {
 
         // create enemySelectionContainer - holds remaining characters after hero selection
         $("<div/>").attr("id", "enemySelectionContainer").appendTo("main");
-
-        // create onDeckContainer - holds remaining characters after hero and enemy selection
-        $("<div/>").attr("id", "onDeckContainer").appendTo("main");
 
         // create battleContainer - holds battle information
         $("<div/>").attr("id", "battleContainer").appendTo("main");
@@ -196,7 +188,8 @@ let gameObject = {
                 gameObject.heroAttack = 0;
                 $(this).attr("class", "hero");
                 $(".hero").appendTo("#attacker");
-                $(".character").appendTo("#enemySelectionContainer").hide();
+                $(".character").appendTo("#enemySelectionContainer")
+                $("#enemySelectionContainer").hide();
                 $("#status").text("You chose " + ($(this).attr("data-name")) + " as your hero. Are you sure?");
                 gameObject.confirmHeroSelection();
             });
@@ -224,7 +217,6 @@ let gameObject = {
         $("#confirmHeroBtn").hide();
         $("#returnHeroBtn").hide();
         $(".hero").hide();
-        $(".character").show();
         gameObject.chooseEnemy();
     },
 
@@ -233,6 +225,7 @@ let gameObject = {
 
     chooseEnemy : function() {
         $("#status").text("Select an enemy to battle.");
+        $("#enemySelectionContainer").show();
         for (let i = 0; i < 1; i++) {
             $("#enemySelectionContainer").on("click", ".character", function() {
                 gameObject.enemyCounter = ($(this).attr("data-ca")); 
@@ -240,7 +233,7 @@ let gameObject = {
                 $(this).attr("class", "defender");
                 $(".defender").appendTo("#defender");
                 $("#status").text("You chose to battle " + ($(this).attr("data-name")) + ". Are you sure?");
-                $(".character").appendTo("#onDeckContainer").hide();
+                $("#enemySelectionContainer").hide();
                 gameObject.confirmEnemySelection();
             });
         }
@@ -266,7 +259,7 @@ let gameObject = {
     confirmEnemy : function() {
         $("#confirmEnemyBtn").hide();
         $("#returnEnemyBtn").hide();
-        $(".character").hide();
+        $("#enemySelectionContainer").hide();
         gameObject.battle();
     },
 
@@ -274,8 +267,9 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     returnEnemy : function() {
+        $(".defender").appendTo("#enemySelectionContainer");
         $(".defender").attr("class", "character");
-        $(".character").appendTo("#enemySelectionContainer").show();
+        $("#enemySelectionContainer").show();
         $("#confirmEnemyBtn").hide();
         $("#returnEnemyBtn").hide();
         gameObject.chooseEnemy();
@@ -298,6 +292,7 @@ let gameObject = {
             $("#battleLog").append("<br>You attacked for " + attack + " damage!");
             $("#battleLog").append("<br>You were counter attacked for " + gameObject.enemyCounter + " damage!<br>")
             gameObject.enemyHealth -= attack;
+            console.log(gameObject.enemyHealth);
             gameObject.checkWin();
             gameObject.heroHealth -= gameObject.enemyCounter;
             gameObject.checkWin();
@@ -333,12 +328,14 @@ let gameObject = {
 
     checkWin : function() {
         $("#status").show();
+        console.log(gameObject.enemiesRemaining);
         if (gameObject.enemyHealth <= 0 ) {
             gameObject.winCount();
-            if (gameObject.enemiesRemaining > 0) { // need to define to be > 0
+            if (gameObject.enemiesRemaining >= 1) { 
                 gameObject.nextEnemy();
             }
             else {
+                $("#status").text("You have defeated all enemies!")
                 gameObject.playAgain();
             }
         }
@@ -351,15 +348,15 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     nextEnemy : function() {
+        gameObject.enemiesRemaining--;
         $("#status").text("You defeated an enemy.")
         $("#attackBtn").hide();
+        $("#battleLog").empty();
         $("#battleLog").hide();
         $(".hero").hide();
         $("#versus").hide();
         $(".defender").empty();
-        $("#onDeckContainer").show();
-        $(".character").show();
-
+        $("#enemySelectionContainer").show();
         gameObject.chooseEnemy();
     },
 
