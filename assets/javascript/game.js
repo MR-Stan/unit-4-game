@@ -1,5 +1,8 @@
 let gameObject = {
 
+    // onDeckContainer is not necessary remove all reference to it
+
+
     // create character objects
     // sum of hp, ap, and ca equals 150 for each character ****************** need to update *******************
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -77,12 +80,13 @@ let gameObject = {
     reset : function() {
         $("main").empty();
         gameObject.createDivs();
-        $("#status").text("Choose a hero to begin.");
+        $("#status").text("Choose a hero to begin your journey.");
         $("#versus").hide(); 
         $("#battleLog").hide();
         $(".button").hide();
 
         $.each(this.characters, function (index) {
+            gameObject.enemiesRemaining = Math.max(index);
             $("#characterContainer").append("<div id='character" + index + "'</div>");
             $("#character" + index).addClass("character");
             $("#character" + index).attr({
@@ -124,7 +128,7 @@ let gameObject = {
                     $("#losses").text("Losses: ");
 
             // create status - tracks status of game
-            $("<div/>").attr("id", "status").appendTo("#gameStatus");
+            $("<div/>").attr("id", "status").appendTo("main");
         // end of gameStatus container
 
         // create characterContainer - holds characters prior to hero selection
@@ -288,7 +292,7 @@ let gameObject = {
         $("#attackBtn").show();
         let attack = parseInt(gameObject.heroAttack);
         $("#attackBtn").click(function() { 
-            $("#status").hide();
+            $("#status").text("May the force be with you!"); // create array of star wars lines and loop through
             $("#battleLog").show();
             attack += parseInt(gameObject.heroBase);
             $("#battleLog").append("<br>You attacked for " + attack + " damage!");
@@ -304,7 +308,7 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     winCount : function() {
-        $("#status").text("You won!");
+        $("#status").text("You win!");
         let winCounter = 0;
         return function() {
             winCounter += 1; 
@@ -316,7 +320,7 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     lossCount : function() {
-        $("#status").text("You lost!");
+        $("#status").text("You lose!");
         let lossCounter = 0;
         return function() {
             lossCounter += 1; 
@@ -330,9 +334,8 @@ let gameObject = {
     checkWin : function() {
         $("#status").show();
         if (gameObject.enemyHealth <= 0 ) {
-            $("#status").text("You defeated an enemy.")
             gameObject.winCount();
-            if (gameObject.enemiesRemaining > 0) {
+            if (gameObject.enemiesRemaining > 0) { // need to define to be > 0
                 gameObject.nextEnemy();
             }
             else {
@@ -348,17 +351,24 @@ let gameObject = {
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     nextEnemy : function() {
-        // hide everything
-        // $(".character").show();
-        // .gameObject.chooseEnemy();
+        $("#status").text("You defeated an enemy.")
+        $("#attackBtn").hide();
+        $("#battleLog").hide();
+        $(".hero").hide();
+        $("#versus").hide();
+        $(".defender").empty();
+        $("#onDeckContainer").show();
+        $(".character").show();
+
+        gameObject.chooseEnemy();
     },
 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     playAgain : function() {
         $("#attackBtn").hide();
-
-        $("#status").text("Would you like to play again?");
+        $("#battleLog").hide();
+        $("#status").append(" Would you like to play again?");
         $("#playAgainBtn").show(); 
         $("#playAgainBtn").click(function() { 
         gameObject.reset();

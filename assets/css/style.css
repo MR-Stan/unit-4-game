@@ -90,3 +90,20 @@ footer {
     width: 50%;
     margin: auto;
 }
+
+#gameStatus {
+    display: inline-flex;
+    border: 1px solid rgb(232,198,39);
+    font-size: 1.1em;
+    background-color:black;
+    color: rgb(232,198,39);
+    opacity: 0.85;
+    line-height: 150%;
+    padding: 0.5%;
+    margin-top: 2%;
+}
+
+#wins, #losses {
+    margin: 1%;
+    
+}
