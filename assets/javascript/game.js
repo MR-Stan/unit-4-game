@@ -61,6 +61,18 @@ let gameObject = {
 
     enemiesRemaining : 0, 
 
+    heroID : 0,
+
+    heroImg : "",
+
+    heroName : "",
+
+    enemyID : 0,
+
+    enemyImg : "",
+
+    heroName : "",
+    
     // initialize game
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -193,6 +205,10 @@ let gameObject = {
             $("#enemySelectionContainer").hide();
             $("#characterContainer").hide();
             $("#status").text("You chose " + ($(this).attr("data-name")) + " as your hero. Are you sure?");
+            gameObject.heroId = this.id;
+            gameObject.heroName = $(this).attr("data-name");
+            let lastChar = gameObject.heroId[gameObject.heroId.length -1];
+            gameObject.heroImg = gameObject.characters[lastChar].img;
             gameObject.confirmHeroSelection();
         });
     },
@@ -227,7 +243,13 @@ let gameObject = {
             $(".defender").appendTo("#defender");
             $("#status").text("You chose to battle " + ($(this).attr("data-name")) + ". Are you sure?");
             $("#enemySelectionContainer").hide();
-            gameObject.confirmEnemySelection(); // this is causing error
+            gameObject.enemyId = this.id;
+            gameObject.enemyName = $(this).attr("data-name");
+            let lastChar = gameObject.enemyId[gameObject.enemyId.length -1];
+            gameObject.enemyImg = gameObject.characters[lastChar].img;
+            gameObject.confirmEnemySelection(); 
+
+
         });
     },
 
@@ -251,7 +273,6 @@ let gameObject = {
         });
     },
 
-
     // 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -271,7 +292,8 @@ let gameObject = {
             $("#battleLog").append("<br>You were counter attacked for " + gameObject.enemyCounter + " damage!<br>")
             gameObject.enemyHealth -= attack;
             gameObject.heroHealth -= gameObject.enemyCounter;
-            $(".heroHP").text("Health: " + gameObject.heroHealth);
+            $("#" + gameObject.heroId).html(gameObject.heroImg + "<br>" + gameObject.heroName + "<br>Health: " + gameObject.heroHealth); 
+            $("#" + gameObject.enemyId).html(gameObject.enemyImg + "<br>" + gameObject.enemyName + "<br>Health: " + gameObject.enemyHealth); 
             gameObject.checkWin();
 
         });
@@ -365,8 +387,6 @@ let gameObject = {
 
 }
 
-
-// name and hp are displayed around character
 
 // must be able to win no matter what character is chosen
 
