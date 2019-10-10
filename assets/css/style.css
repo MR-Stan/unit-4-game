@@ -66,6 +66,11 @@ footer {
     font-size: 1.1em;
 }
 
+#attackBtn {
+    color: red;
+    border: 1px solid red;
+}
+
 #attacker, #defender {
     border: 1px solid black; 
     color: white;
@@ -99,29 +104,25 @@ footer {
 #status {
     width: 50%;
     line-height: 200%;
-    margin: 2% auto;
+    margin: 0.5% auto;
 }
 
 #battleLog {
-    height: 50%;
+    height: 45%;
     width: 50%;
     margin: auto;
 }
 
 #gameStatus {
-    display: inline-flex;
+    margin: auto;
+    width: 50%;
     border: 1px solid rgb(232,198,39);
     font-size: 1.1em;
     background-color:black;
     color: rgb(232,198,39);
     opacity: 0.85;
     line-height: 150%;
-    padding: 0.5%;
-    margin-top: 2%;
-}
-
-#wins, #losses {
-    margin: 1%;
+    margin-top: 0.5%;
 }
 
 .character {

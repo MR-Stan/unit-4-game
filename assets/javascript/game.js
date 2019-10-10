@@ -82,6 +82,8 @@ let gameObject = {
         $("#versus").hide(); 
         $("#battleLog").hide();
         $(".button").hide();
+        $("#enemySelectionContainer").hide()
+        $("#battleContainer").hide();
         $.each(this.characters, function (index) {
             gameObject.enemiesRemaining = Math.max(index);
             $("#characterContainer").append("<div id='character" + index + "'</div>");
@@ -94,7 +96,7 @@ let gameObject = {
             });
             $("#character" + index).append(this.img);
             $("#character" + index).append("<br>" + this.name);
-            $("#character" + index).append("<br>Health: " + this.hp); // this needs to be implemented initially and replaced for attacker and defender
+            $("#character" + index).append("<br>Health: " + this.hp); 
         });
         gameObject.chooseHero();
         },
@@ -104,27 +106,21 @@ let gameObject = {
 
     createDivs : function() {
 
-        // // create gameStatus container
-        // $("<div/>").attr("id", "gameStatus").appendTo("main");
+        // create gameStatus container
+        $("<div/>").attr("id", "gameStatus").appendTo("main");
 
-        //     // create winText - hold wins
-        //     $("<div/>").attr("id", "winText").appendTo("#gameStatus");
+            // create winText - hold wins
+            $("<div/>").attr("id", "winText").appendTo("#gameStatus");
 
-        //         // create wins - holds 'Wins: '
-        //         $("<span/>").attr("id", "wins").appendTo("#winText");
+                // add 'Wins:0' text
+                $("#winText").text("Wins: 0");
 
-        //         // add 'Wins: ' text
-        //         $("#wins").text("Wins: ");
+            // create lossText - holds losses
+            $("<div/>").attr("id", "lossText").appendTo("#gameStatus");
 
-        //     // create lossText - holds losses
-        //     $("<div/>").attr("id", "lossText").appendTo("#gameStatus");
-
-        //         // create losses - holds 'Losses: '
-        //         $("<span/>").attr("id", "losses").appendTo("#lossText");
-
-        //         // add 'Losses: ' text
-        //         $("#losses").text("Losses: ");
-        // // end of gameStatus container
+                // add 'Losses: ' text
+                $("#lossText").text("Losses: 0");
+        // end of gameStatus container
 
         // create status - tracks status of game
         $("<div/>").attr("id", "status").appendTo("main");
@@ -175,16 +171,20 @@ let gameObject = {
         // create play again button
         $("<button>", {text : "Play Again", id : "playAgainBtn", class : "button"}).appendTo("#buttonContainer");
 
+        // create next enemy button
+        $("<button>", {text : "Next Enemy", id : "nextBtn", class : "button"}).appendTo("#buttonContainer");
+
         // create battleLog - keeps track of attack and counter damage
         $("<div/>").attr("id", "battleLog").appendTo("main");
 
     },
 
-    // 
+    // Assigns hero information when character is selected
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     chooseHero : function() {
         $("#characterContainer").on("click", ".character", function() {
+            $("#battleContainer").show();
             gameObject.heroHealth = ($(this).attr("data-hp"));
             gameObject.heroBase = ($(this).attr("data-ap"));
             gameObject.heroAttack = 0;
@@ -202,7 +202,7 @@ let gameObject = {
         });
     },
 
-    // 
+    // Confirms hero selection
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     confirmHeroSelection : function() {
@@ -218,10 +218,11 @@ let gameObject = {
         });
     },
 
-    // 
+    // Assigns enemy information when character is selected
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     chooseEnemy : function() {
+        $("#nextBtn").hide();
         $("#status").text("Select an enemy to battle.");
         $("#enemySelectionContainer").show();
         $("#enemySelectionContainer").on("click", ".character", function(e) {
@@ -240,7 +241,7 @@ let gameObject = {
         });
     },
 
-    // 
+    // Confirms enemy selection
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     confirmEnemySelection : function() {
@@ -260,7 +261,7 @@ let gameObject = {
         });
     },
 
-    // 
+    // Battle screen - attacker (hero) - VS - enemy (defender)
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     battle : function() {
@@ -285,7 +286,7 @@ let gameObject = {
         });
     },
 
-    // 
+    // Keeping track of wins
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     winCount : function() {
@@ -293,12 +294,12 @@ let gameObject = {
         let winCounter = 0;
         return function() {
             winCounter += 1; 
-            $("#wins").text(winCounter);
+            $("#winText").text("Wins: " + winCounter);
             return winCounter;
         }
-    },
+    }(),
 
-    //
+    // Keeping track of losses
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     lossCount : function() {
@@ -306,63 +307,82 @@ let gameObject = {
         let lossCounter = 0;
         return function() {
             lossCounter += 1; 
-            $("#losses").text(lossCounter);
+            $("#lossText").append("Losses: " + lossCounter);
             return lossCounter;
         }
-    },
+    }(),
 
-    //
+    // Checking to see if win / loss occurred on last attackBtn click
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     checkWin : function() {
         $("#status").show();
-        if (gameObject.enemyHealth <= 0 && gameObject.heroHealth > 0) {
-            gameObject.winCount();
-            if (gameObject.enemiesRemaining > 1) { 
-                gameObject.nextEnemy();
-            }
-            else {
-                $("#battleContainer").hide();
-                $("#status").text("You have defeated all enemies!")
-                gameObject.playAgain();
+        if this.enemyHealth <= 0 {
+            if this.enemiesRemaining === 0{
+
             }
         }
-        else if (gameObject.heroHealth <= 0 && gameObject.enemyHealth > 0) {
-            $("#status").text("You were defeated!");
-            gameObject.lossCount();
-            gameObject.playAgain();
-        }
-        else if (gameObject.heroHealth < 0 && gameObject.enemyHealth < 0) {
-            gameObject.winCount();
-            if (gameObject.enemiesRemaining > 1) { 
-                $("#status").text("You were defeated!");
-                gameObject.playAgain();
+        else if (this.enemyHealth > 0) {
+            if (this.heroHealth > 0) {
+
             }
-            else {
-                $("#battleContainer").hide();
-                $("#status").text("You have defeated all enemies!")
-                gameObject.playAgain();
+            else if (this.heroHealth > 0) {
+                // lose
             }
         }
+        
+        // if (gameObject.enemyHealth <= 0 && gameObject.heroHealth > 0) {
+        //     gameObject.winCount();
+        //     if (gameObject.enemiesRemaining > 1) { 
+        //         gameObject.nextEnemy();
+        //     }
+        //     else {
+        //         $("#battleContainer").hide();
+        //         $("#status").text("You have defeated all enemies!")
+        //         gameObject.playAgain();
+        //     }
+        // }
+        // else if (gameObject.heroHealth <= 0 && gameObject.enemyHealth > 0) {
+        //     $("#status").text("You were defeated!");
+        //     gameObject.lossCount();
+        //     gameObject.playAgain();
+        // }
+        // else if (gameObject.heroHealth < 0 && gameObject.enemyHealth < 0) {
+        //     gameObject.winCount();
+        //     if (gameObject.enemiesRemaining > 1) { 
+        //         $("#status").text("You were defeated!");
+        //         gameObject.playAgain();
+        //     }
+        //     else {
+        //         $("#battleContainer").hide();
+        //         $("#status").text("You have defeated all enemies!")
+        //         gameObject.playAgain();
+        //     }
+        // }
+
+
     },
 
-    // 
+    // Returns to enemy selection after defender is defeated if additional enemies remain
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     nextEnemy : function() {
         gameObject.enemiesRemaining--;
         $("#status").text("You defeated an enemy.")
         $("#attackBtn").hide();
-        $("#battleLog").empty();
-        $("#battleLog").hide();
-        $(".hero").hide();
-        $("#versus").hide();
-        $(".defender").empty();
-        $("#enemySelectionContainer").show();
-        gameObject.chooseEnemy();
+        $("#nextBtn").show();
+        $("#nextBtn").on("click", function() {
+            $(".hero").hide();
+            $("#versus").hide();
+            $(".defender").empty();
+            $("#battleLog").empty();
+            $("#battleLog").hide();
+            $("#enemySelectionContainer").show();
+            gameObject.chooseEnemy();
+        });
     },
 
-    //
+    // Gives the user the option to reset the game
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     playAgain : function() {
