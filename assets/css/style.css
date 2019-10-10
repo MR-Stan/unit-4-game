@@ -111,6 +111,7 @@ footer {
     height: 45%;
     width: 50%;
     margin: auto;
+    overflow: auto;
 }
 
 #gameStatus {

@@ -5,24 +5,24 @@ let gameObject = {
     characters : [
         {
             name: "Obi-Wan Kenobi",
-            hp: 130, // health points
-            ap: 12, // attack power
-            ca: 8, // counter attack power
+            hp: 120, // health points
+            ap: 8, // attack power
+            ca: 12, // counter attack power
             img: "<img src='assets/images/obi.webp' alt='image of Obi-Wan Kenobi' class='image'>"
         },
 
         {
             name: "Luke Skywalker",
-            hp: 120, // health points
-            ap: 15, // attack power
-            ca: 15, // counter attack power
+            hp: 110, // health points
+            ap: 12, // attack power
+            ca: 8, // counter attack power
             img: "<img src='assets/images/luke.jpg' alt='image of Luke Skywalker' class='image'>"
         },
 
         {
             name: "Darth Sidious",
-            hp: 125, // health points
-            ap: 10, // attack power
+            hp: 150, // health points
+            ap: 5, // attack power
             ca: 15, // counter attack power
             img: "<img src='assets/images/darthsidious.webp' alt='image of Darth Sidious' class='image'>"
         },
@@ -30,16 +30,16 @@ let gameObject = {
         {
             name: "Darth Maul",
             hp: 100, // health points
-            ap: 30, // attack power
-            ca: 20, // counter attack power
+            ap: 5, // attack power
+            ca: 15, // counter attack power
             img: "<img src='assets/images/darthmaul.jpg' alt='image of Darth Maul' class='image'>"
         },
 
         {
             name: "Yoda",
-            hp: 130, // health points
-            ap: 12, // attack power
-            ca: 8, // counter attack power
+            hp: 140, // health points
+            ap: 10, // attack power
+            ca: 10, // counter attack power
             img: "<img src='assets/images/yoda.jpg' alt='image of Yoda' class='image'>"
         }
 
@@ -71,13 +71,17 @@ let gameObject = {
     enemyImg : "",
 
     heroName : "",
+
+    winCounter : 0,
+
+    lossCounter : 0,
     
     // reset game 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     reset : function() {
         $("main").empty();
-        gameObject.createDivs();
+        this.createDivs();
         $("#status").text("Choose a hero to begin your journey.");
         $("#versus").hide(); 
         $("#battleLog").hide();
@@ -85,7 +89,7 @@ let gameObject = {
         $("#enemySelectionContainer").hide()
         $("#battleContainer").hide();
         $.each(this.characters, function (index) {
-            gameObject.enemiesRemaining = Math.max(index);
+            gameObject.enemiesRemaining = (Math.max(index) - 1);
             $("#characterContainer").append("<div id='character" + index + "'</div>");
             $("#character" + index).addClass("character");
             $("#character" + index).attr({
@@ -113,13 +117,13 @@ let gameObject = {
             $("<div/>").attr("id", "winText").appendTo("#gameStatus");
 
                 // add 'Wins:0' text
-                $("#winText").text("Wins: 0");
+                $("#winText").text("Battles Won: " + gameObject.winCounter);
 
             // create lossText - holds losses
             $("<div/>").attr("id", "lossText").appendTo("#gameStatus");
 
                 // add 'Losses: ' text
-                $("#lossText").text("Losses: 0");
+                $("#lossText").text("Heroes Lost: " + gameObject.lossCounter);
         // end of gameStatus container
 
         // create status - tracks status of game
@@ -270,7 +274,7 @@ let gameObject = {
         $(".hero").show();
         $("#versus").show();
         $("#attackBtn").show();
-        let attack = parseInt(gameObject.heroAttack);
+        let attack = parseInt(this.heroAttack);
         $("#attackBtn").click(function(e) { 
             e.stopImmediatePropagation();
             $("#status").text("May the force be with you!"); 
@@ -279,7 +283,15 @@ let gameObject = {
             $("#battleLog").append("<br>You attacked for " + attack + " damage!");
             $("#battleLog").append("<br>You were counter attacked for " + gameObject.enemyCounter + " damage!<br>")
             gameObject.enemyHealth -= attack;
-            gameObject.heroHealth -= gameObject.enemyCounter;
+            if (gameObject.enemyHealth > 0) {
+                gameObject.heroHealth -= gameObject.enemyCounter;
+                if (gameObject.heroHealth < 0) {
+                    gameObject.heroHealth = 0;
+                }
+            }
+            else if (gameObject.enemyHealth <= 0) {
+                gameObject.enemyHealth = 0;
+            }
             $("#" + gameObject.heroId).html(gameObject.heroImg + "<br>" + gameObject.heroName + "<br>Health: " + gameObject.heroHealth); 
             $("#" + gameObject.enemyId).html(gameObject.enemyImg + "<br>" + gameObject.enemyName + "<br>Health: " + gameObject.enemyHealth); 
             gameObject.checkWin();
@@ -294,7 +306,7 @@ let gameObject = {
         let winCounter = 0;
         return function() {
             winCounter += 1; 
-            $("#winText").text("Wins: " + winCounter);
+            $("#winText").text("Battles Won: " + winCounter);
             return winCounter;
         }
     }(),
@@ -307,7 +319,7 @@ let gameObject = {
         let lossCounter = 0;
         return function() {
             lossCounter += 1; 
-            $("#lossText").append("Losses: " + lossCounter);
+            $("#lossText").text("Heroes Lost: " + lossCounter);
             return lossCounter;
         }
     }(),
@@ -317,57 +329,32 @@ let gameObject = {
 
     checkWin : function() {
         $("#status").show();
-        if this.enemyHealth <= 0 {
-            if this.enemiesRemaining === 0{
-
+        if (this.enemyHealth === 0) {
+            gameObject.winCount();
+            if (this.enemiesRemaining === 0) {
+                $("#battleContainer").hide();
+                $("#status").text("You have defeated all enemies!")
+                this.playAgain();
+            }
+            else {
+                this.nextEnemy();
             }
         }
         else if (this.enemyHealth > 0) {
-            if (this.heroHealth > 0) {
-
-            }
-            else if (this.heroHealth > 0) {
-                // lose
+            if (this.heroHealth <= 0) {
+                gameObject.lossCount();
+                $("#status").text("You were defeated!");
+                this.lossCount();
+                this.playAgain();
             }
         }
-        
-        // if (gameObject.enemyHealth <= 0 && gameObject.heroHealth > 0) {
-        //     gameObject.winCount();
-        //     if (gameObject.enemiesRemaining > 1) { 
-        //         gameObject.nextEnemy();
-        //     }
-        //     else {
-        //         $("#battleContainer").hide();
-        //         $("#status").text("You have defeated all enemies!")
-        //         gameObject.playAgain();
-        //     }
-        // }
-        // else if (gameObject.heroHealth <= 0 && gameObject.enemyHealth > 0) {
-        //     $("#status").text("You were defeated!");
-        //     gameObject.lossCount();
-        //     gameObject.playAgain();
-        // }
-        // else if (gameObject.heroHealth < 0 && gameObject.enemyHealth < 0) {
-        //     gameObject.winCount();
-        //     if (gameObject.enemiesRemaining > 1) { 
-        //         $("#status").text("You were defeated!");
-        //         gameObject.playAgain();
-        //     }
-        //     else {
-        //         $("#battleContainer").hide();
-        //         $("#status").text("You have defeated all enemies!")
-        //         gameObject.playAgain();
-        //     }
-        // }
-
-
     },
 
     // Returns to enemy selection after defender is defeated if additional enemies remain
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     nextEnemy : function() {
-        gameObject.enemiesRemaining--;
+        this.enemiesRemaining--;
         $("#status").text("You defeated an enemy.")
         $("#attackBtn").hide();
         $("#nextBtn").show();
