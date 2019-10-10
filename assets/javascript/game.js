@@ -1,7 +1,6 @@
 let gameObject = {
 
-    // create character objects
-    // sum of hp, ap, and ca equals 150 for each character ****************** need to update *******************
+    // character objects
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
     characters : [
         {
@@ -46,7 +45,7 @@ let gameObject = {
 
     ],
 
-    // set gameObject variables
+    // gameObject variables
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     heroHealth : 0,
@@ -72,16 +71,6 @@ let gameObject = {
     enemyImg : "",
 
     heroName : "",
-    
-    // initialize game
-    // ------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    initialize : function() {
-        $(document).ready(function() {
-        // provide instructions
-        gameObject.reset();
-        });
-    },
     
     // reset game 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -229,7 +218,7 @@ let gameObject = {
         });
     },
 
-      // 
+    // 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     chooseEnemy : function() {
@@ -248,8 +237,6 @@ let gameObject = {
             let lastChar = gameObject.enemyId[gameObject.enemyId.length -1];
             gameObject.enemyImg = gameObject.characters[lastChar].img;
             gameObject.confirmEnemySelection(); 
-
-
         });
     },
 
@@ -285,7 +272,7 @@ let gameObject = {
         let attack = parseInt(gameObject.heroAttack);
         $("#attackBtn").click(function(e) { 
             e.stopImmediatePropagation();
-            $("#status").text("May the force be with you!"); // create array of star wars lines and loop through
+            $("#status").text("May the force be with you!"); 
             $("#battleLog").show();
             attack += parseInt(gameObject.heroBase);
             $("#battleLog").append("<br>You attacked for " + attack + " damage!");
@@ -295,40 +282,42 @@ let gameObject = {
             $("#" + gameObject.heroId).html(gameObject.heroImg + "<br>" + gameObject.heroName + "<br>Health: " + gameObject.heroHealth); 
             $("#" + gameObject.enemyId).html(gameObject.enemyImg + "<br>" + gameObject.enemyName + "<br>Health: " + gameObject.enemyHealth); 
             gameObject.checkWin();
-
         });
     },
 
+    // 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    // winCount : function() {
-    //     $("#status").text("You win!");
-    //     let winCounter = 0;
-    //     return function() {
-    //         winCounter += 1; 
-    //         $("#wins").text(winCounter);
-    //         return winCounter;
-    //     }
-    // },
+    winCount : function() {
+        $("#status").text("You win!");
+        let winCounter = 0;
+        return function() {
+            winCounter += 1; 
+            $("#wins").text(winCounter);
+            return winCounter;
+        }
+    },
 
+    //
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    // lossCount : function() {
-    //     $("#status").text("You lose!");
-    //     let lossCounter = 0;
-    //     return function() {
-    //         lossCounter += 1; 
-    //         $("#losses").text(lossCounter);
-    //         return lossCounter;
-    //     }
-    // },
+    lossCount : function() {
+        $("#status").text("You lose!");
+        let lossCounter = 0;
+        return function() {
+            lossCounter += 1; 
+            $("#losses").text(lossCounter);
+            return lossCounter;
+        }
+    },
 
+    //
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     checkWin : function() {
         $("#status").show();
         if (gameObject.enemyHealth <= 0 && gameObject.heroHealth > 0) {
-            //gameObject.winCount();
+            gameObject.winCount();
             if (gameObject.enemiesRemaining > 1) { 
                 gameObject.nextEnemy();
             }
@@ -340,13 +329,14 @@ let gameObject = {
         }
         else if (gameObject.heroHealth <= 0 && gameObject.enemyHealth > 0) {
             $("#status").text("You were defeated!");
-            //gameObject.lossCount();
+            gameObject.lossCount();
             gameObject.playAgain();
         }
         else if (gameObject.heroHealth < 0 && gameObject.enemyHealth < 0) {
-            //gameObject.winCount();
+            gameObject.winCount();
             if (gameObject.enemiesRemaining > 1) { 
-                gameObject.nextEnemy();
+                $("#status").text("You were defeated!");
+                gameObject.playAgain();
             }
             else {
                 $("#battleContainer").hide();
@@ -356,6 +346,7 @@ let gameObject = {
         }
     },
 
+    // 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     nextEnemy : function() {
@@ -371,6 +362,7 @@ let gameObject = {
         gameObject.chooseEnemy();
     },
 
+    //
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
     playAgain : function() {
@@ -380,16 +372,9 @@ let gameObject = {
         $("#playAgainBtn").click(function() { 
             gameObject.reset();
         });
-        
     },
-
-    // keep count of wins and losses by battle. if win select next enemy. if lose replace enemy and select next.
-
 }
 
-
-// must be able to win no matter what character is chosen
-
-gameObject.initialize();
+gameObject.reset();
 
 
