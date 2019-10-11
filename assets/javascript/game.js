@@ -1,3 +1,7 @@
+let winCounter = 0;
+
+let lossCounter = 0;
+
 let gameObject = {
 
     // character objects
@@ -71,10 +75,6 @@ let gameObject = {
     enemyImg : "",
 
     heroName : "",
-
-    winCounter : 0,
-
-    lossCounter : 0,
     
     // reset game 
     // ------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -117,13 +117,13 @@ let gameObject = {
             $("<div/>").attr("id", "winText").appendTo("#gameStatus");
 
                 // add 'Wins:0' text
-                $("#winText").text("Battles Won: " + gameObject.winCounter);
+                $("#winText").text("Battles Won: " + winCounter);
 
             // create lossText - holds losses
             $("<div/>").attr("id", "lossText").appendTo("#gameStatus");
 
                 // add 'Losses: ' text
-                $("#lossText").text("Heroes Lost: " + gameObject.lossCounter);
+                $("#lossText").text("Heroes Lost: " + lossCounter);
         // end of gameStatus container
 
         // create status - tracks status of game
@@ -180,7 +180,6 @@ let gameObject = {
 
         // create battleLog - keeps track of attack and counter damage
         $("<div/>").attr("id", "battleLog").appendTo("main");
-
     },
 
     // Assigns hero information when character is selected
@@ -303,7 +302,7 @@ let gameObject = {
 
     winCount : function() {
         $("#status").text("You win!");
-        let winCounter = 0;
+        //let winCounter = 0;
         return function() {
             winCounter += 1; 
             $("#winText").text("Battles Won: " + winCounter);
@@ -316,7 +315,7 @@ let gameObject = {
 
     lossCount : function() {
         $("#status").text("You lose!");
-        let lossCounter = 0;
+        //let lossCounter = 0;
         return function() {
             lossCounter += 1; 
             $("#lossText").text("Heroes Lost: " + lossCounter);
@@ -342,7 +341,6 @@ let gameObject = {
         }
         else if (this.enemyHealth > 0) {
             if (this.heroHealth <= 0) {
-                gameObject.lossCount();
                 $("#status").text("You were defeated!");
                 this.lossCount();
                 this.playAgain();
