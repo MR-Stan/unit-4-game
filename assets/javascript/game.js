@@ -229,7 +229,7 @@ let gameObject = {
         $("#status").text("Select an enemy to battle.");
         $("#enemySelectionContainer").show();
         $("#enemySelectionContainer").on("click", ".character", function(e) {
-            e.stopImmediatePropagation()
+            e.stopImmediatePropagation();
             gameObject.enemyCounter = ($(this).attr("data-ca")); 
             gameObject.enemyHealth = ($(this).attr("data-hp"));
             $(this).attr("class", "defender");
